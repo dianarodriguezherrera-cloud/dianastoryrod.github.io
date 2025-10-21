@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Her Flight Path</title>
+  <style>
+    :root{
+      --bg:#0b0e12; /* night-sky */
+      --ink:#e6e9ee; /* text */
+      --muted:#9aa3b2;
+      --accent:#82b1ff; /* runway lights */
+      --glow:0 0 30px rgba(130,177,255,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color:var(--ink); background:radial-gradient(1200px 600px at 70% -10%, #1b2331 0%, var(--bg) 50%), var(--bg);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+
+    /* Header */
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:20px 24px; position:sticky; top:0; backdrop-filter:blur(6px);
+      background:linear-gradient(180deg, rgba(11,14,18,.9) 0, rgba(11,14,18,.6) 100%);
+      border-bottom:1px solid rgba(255,255,255,.06);
+      z-index:50;
+    }
+    .brand{font-weight:700; letter-spacing:.02em}
+    .muted{color:var(--muted)}
+    .controls{display:flex; gap:10px; align-items:center}
+    .btn{
+      border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04);
+      padding:8px 12px; border-radius:12px; cursor:pointer; font-weight:600;
+    }
+    .btn:hover{background:rgba(255,255,255,.08)}
+
+    /* Scene */
+    .scene{
+      position:relative; height:72vh; max-height:820px; min-height:520px;
+      margin:18px auto 0; max-width:1100px; border-radius:24px; overflow:hidden;
+      background:radial-gradient(800px 400px at 20% 10%, rgba(130,177,255,.08), transparent 60%),
+                 radial-gradient(900px 500px at 80% 0%, rgba(255,255,255,.05), transparent 60%),
+                 linear-gradient(0deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
+                 #0e131a;
+      box-shadow:0 20px 80px rgba(0,0,0,.6), var(--glow);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .hint{position:absolute; bottom:14px; left:50%; transform:translateX(-50%); color:var(--muted); font-size:.95rem}
+
+    /* Clickable items */
+    .item{position:absolute; width:11vw; max-width:160px; min-width:100px; aspect-ratio:1; display:block; text-decoration:none; border-radius:16px;
+      background:#10161f center/contain no-repeat; box-shadow:0 6px 26px rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.06);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+    .item:hover{transform:translateY(-4px) rotate(-1deg); box-shadow:0 10px 28px rgba(0,0,0,.65), 0 0 0 2px rgba(130,177,255,.18) inset; filter:saturate(1.1)}
+
+    /* Placeholders use emoji bg until user adds real images */
+    .jacket{background-image:var(--img-jacket)}
+    .wings{background-image:var(--img-wings)}
+    .badge{background-image:var(--img-badge)}
+    .photo{background-image:var(--img-photo)}
+    .patch{background-image:var(--img-patch)}
+    .tags{background-image:var(--img-tags)}
+
+    /* Positions (feel free to tweak) */
+    .jacket{left:6%; top:18%; transform:rotate(-4deg)}
+    .wings{left:24%; top:8%;}
+    .badge{left:44%; top:22%;}
+    .photo{left:68%; top:12%; transform:rotate(3deg)}
+    .patch{left:20%; bottom:14%; transform:rotate(6deg)}
+    .tags{left:60%; bottom:10%; transform:rotate(-8deg)}
+
+    /* Chapters */
+    section.chapter{padding:80px 22px 72px; max-width:850px; margin:0 auto; border-top:1px solid rgba(255,255,255,.06)}
+    section.chapter h2{margin:0 0 10px; font-size:clamp(24px, 3vw, 38px)}
+    section.chapter p{line-height:1.75; color:#dfe6f3; font-size:clamp(16px, 1.5vw, 18px)}
+    .nav{display:flex; gap:12px; margin-top:18px}
+    .nav a{padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.14); text-decoration:none}
+    .nav a:hover{background:rgba(255,255,255,.06)}
+
+    footer{color:var(--muted); padding:60px 22px 80px; text-align:center}
+
+    /* Responsive tweak */
+    @media (max-width:720px){
+      .item{min-width:84px}
+      .scene{height:64vh; min-height:460px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Her Flight Path</div>
+    <div class="controls">
+      <button class="btn" id="soundToggle" aria-pressed="false" aria-label="Toggle ambience">🔊 Sound</button>
+      <a class="btn" href="#chapter-1">Start</a>
+      <a class="btn" href="https://github.com/" target="_blank" rel="noreferrer">Code</a>
+    </div>
+  </header>
+
+  <!-- SCENE: clickable objects that link to chapters (hash links feel like separate pages) -->
+  <main class="scene" aria-label="Flight desk with scattered keepsakes">
+    <a class="item jacket" href="#chapter-1" aria-label="Flight jacket"></a>
+    <a class="item wings"  href="#chapter-2" aria-label="Pilot wings"></a>
+    <a class="item badge"  href="#chapter-3" aria-label="Name badge"></a>
+    <a class="item photo"  href="#chapter-4" aria-label="Polaroid photo"></a>
+    <a class="item patch"  href="#chapter-5" aria-label="Squadron patch"></a>
+    <a class="item tags"   href="#chapter-epilogue" aria-label="Dog tags"></a>
+    <div class="hint muted">Click an item to open a chapter • Press J/K or ←/→ to move</div>
+  </main>
+
+  <!-- CHAPTERS -->
+  <section id="chapter-1" class="chapter" tabindex="-1">
+    <h2>1 · Recruitment — The Doorway</h2>
+    <p>
+      The jacket still smells like jet fuel and rain. She runs a thumb along the stitched name tape and
+      feels a soft thud in her chest—the sound of a door clicking open. In a waiting room brighter
+      than morning, she signs her name. The pen shakes, slightly. Courage, she learns, is not loud;
+      it’s a quiet hand steadying itself.
+    </p>
+    <div class="nav">
+      <a href="#top" aria-label="Back to items">◀︎ Back</a>
+      <a href="#chapter-2" aria-label="Next chapter">Next ▶︎</a>
+    </div>
+  </section>
+
+  <section id="chapter-2" class="chapter" tabindex="-1">
+    <h2>2 · Training — Learning the Sky</h2>
+    <p>
+      Her first set of wings is plastic and light, pinned crooked in the mirror. The real lessons are
+      heavier: checklists like prayers, acronyms like new alphabets, and the calm voice of an instructor
+      saying, <em>again</em>. The runway looks short until she trusts the math. Rotation. Lift. Be small
+      with your movements. The sky is a patient teacher.
+    </p>
+    <div class="nav">
+      <a href="#chapter-1">◀︎ Prev</a>
+      <a href="#chapter-3">Next ▶︎</a>
+    </div>
+  </section>
+
+  <section id="chapter-3" class="chapter" tabindex="-1">
+    <h2>3 · First Solo — Name, Spoken by Wind</h2>
+    <p>
+      The badge is new, the letters crisp. She says them into her headset once, just to hear them.
+      The tower hands her the pattern like a secret. On final, the whole world narrows to centerline
+      and numbers. Tires whisper. The earth accepts her. For the first time, the silence after shutdown
+      belongs to her too.
+    </p>
+    <div class="nav">
+      <a href="#chapter-2">◀︎ Prev</a>
+      <a href="#chapter-4">Next ▶︎</a>
+    </div>
+  </section>
+
+  <section id="chapter-4" class="chapter" tabindex="-1">
+    <h2>4 · Deployment — The Weight of Distance</h2>
+    <p>
+      In the photo, the horizon is a thin coin of light. Nights stack up like rations. She learns the
+      shape of home by its absence: voices through a phone, the time zones braided like rope. The hum
+      of the aircraft becomes a heartbeat she borrows. <em>Copy, roger.</em> The work is precise so the
+      thoughts can wander safely.
+    </p>
+    <div class="nav">
+      <a href="#chapter-3">◀︎ Prev</a>
+      <a href="#chapter-5">Next ▶︎</a>
+    </div>
+  </section>
+
+  <section id="chapter-5" class="chapter" tabindex="-1">
+    <h2>5 · Return — Patches and Stories</h2>
+    <p>
+      The squadron patch frays at the edges from high-fives and Velcro. Stories cluster in the chow
+      hall like migrating birds: the near-misses, the perfect landings, the dumb luck. When she laughs,
+      it’s from the belly this time. Pride is not a shout; it’s a steady glow on the instrument panel.
+    </p>
+    <div class="nav">
+      <a href="#chapter-4">◀︎ Prev</a>
+      <a href="#chapter-epilogue">Next ▶︎</a>
+    </div>
+  </section>
+
+  <section id="chapter-epilogue" class="chapter" tabindex="-1">
+    <h2>Epilogue · Dog Tags — What Remains</h2>
+    <p>
+      The tags are cool against her palm. She doesn’t wear them every day now, but once in a while she
+      lets them ring together like a tiny bell. The sound is a map: every place she carried herself
+      when she wasn’t sure she could. She hangs them by the door. Tomorrow is just another flight.
+    </p>
+    <div class="nav">
+      <a href="#chapter-5">◀︎ Prev</a>
+      <a href="#top">Back to Items ⌂</a>
+    </div>
+  </section>
+
+  <footer>
+    Built as a net art piece for GitHub Pages · Replace placeholder images and audio to make it yours.
+  </footer>
+
+  <audio id="ambience" loop preload="auto">
+    <!-- Drop an mp3 like audio/radio-chatter.mp3 into your repo and set src below -->
+    <source src="audio/radio-chatter.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    // ===== YOUR IMAGES =====\n// Save these files in /images with the exact filenames below.\n// You can change the names/paths if you prefer.\nconst cssRoot = document.documentElement;\ncssRoot.style.setProperty('--img-jacket', 'url(images/usaf-pt-jacket.jpg)');\ncssRoot.style.setProperty('--img-wings',  'url(images/usaf-wings-logo.png)');\ncssRoot.style.setProperty('--img-badge',  'url(images/usaf-seal-round.png)');\ncssRoot.style.setProperty('--img-photo',  'url(images/usaf-abu-uniform.png)');\ncssRoot.style.setProperty('--img-patch',  'url(images/usaf-combat-boot.png)');\ncssRoot.style.setProperty('--img-tags',   'url(images/usaf-pt-shorts.png)');\n\n// (Optional) If an image fails to load, uncomment the placeholder code below to show an emoji instead.\n/*\nconst svg = (emoji)=>`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='100%' height='100%' rx='20' ry='20' fill='%23131a24'/><text x='50%' y='52%' dominant-baseline='middl (J/K and arrows) =====
+    const chapters = ['chapter-1','chapter-2','chapter-3','chapter-4','chapter-5','chapter-epilogue'];
+    function currentIndex(){
+      const id = location.hash.replace('#','');
+      return Math.max(0, chapters.indexOf(id));
+    }
+    function go(delta){
+      const i = currentIndex();
+      const next = Math.min(chapters.length-1, Math.max(0, i+delta));
+      location.hash = '#' + chapters[next];
+    }
+    window.addEventListener('keydown', (e)=>{
+      if(['ArrowRight','KeyK'].includes(e.code)) go(1);
+      if(['ArrowLeft','KeyJ'].includes(e.code)) go(-1);
+    });
+
+    // Move focus to chapter heading when hash changes (accessibility)
+    function focusChapter(){
+      const el = document.querySelector(location.hash || 'main.scene');
+      if(el) el.focus && el.focus();
+    }
+    window.addEventListener('hashchange', focusChapter);
+    window.addEventListener('load', focusChapter);
+
+    // ===== Ambience toggle =====
+    const audio = document.getElementById('ambience');
+    const toggle = document.getElementById('soundToggle');
+    let playing = false;
+    async function startAudio(){
+      try{ await audio.play(); playing = true; toggle.setAttribute('aria-pressed','true'); toggle.textContent='🔊 Sound: On'; }
+      catch(err){ /* autoplay blocked until first user gesture */ }
+    }
+    toggle.addEventListener('click', ()=>{
+      if(!playing){ startAudio(); }
+      else{ audio.pause(); playing=false; toggle.setAttribute('aria-pressed','false'); toggle.textContent='🔇 Sound: Off'; }
+    });
+  </script>
+</body>
+</html>
