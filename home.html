@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Her Flight Path — Home</title>
+<style>
+  :root{
+    --bg:#0a1020; --ink:#e8ecf5; --muted:#a5adc0; --accent:#6fa3ff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 70% -20%, #223164 0%, transparent 60%),
+      #0a1020;
+    min-height:100vh; display:grid; place-items:center; overflow:hidden;
+  }
+  .wrap{
+    width:min(1050px,92vw); display:grid; grid-template-columns:1.1fr .9fr; gap:28px;
+    background:linear-gradient(180deg,#0f1a3a, #0b122a);
+    border:1px solid rgba(255,255,255,.08); border-radius:24px; padding:28px;
+    box-shadow:0 30px 100px rgba(0,0,0,.55);
+    position:relative;
+  }
+  /* blueprint grid */
+  .wrap::before{
+    content:""; position:absolute; inset:0; pointer-events:none; border-radius:24px;
+    background:
+      repeating-linear-gradient(0deg, rgba(111,163,255,.08) 0 1px, transparent 1px 24px),
+      repeating-linear-gradient(90deg, rgba(111,163,255,.08) 0 1px, transparent 1px 24px);
+    mask:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.8));
+  }
+  h1{margin:0 0 8px; font-size:clamp(28px,4vw,44px); color:var(--accent); letter-spacing:.03em}
+  p{margin:0 0 16px; color:#dfe6f9; line-height:1.7}
+  .buttons{display:flex; gap:12px; margin-top:14px}
+  a.button, button.button{
+    text-decoration:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06);
+    color:var(--ink); padding:10px 16px; border-radius:12px; font-weight:600; cursor:pointer;
+  }
+  a.button:hover, button.button:hover{background:rgba(255,255,255,.12)}
+  .badge{color:var(--muted); font-size:.95rem}
+  .right{
+    position:relative; display:grid; place-items:center; padding:8px;
+    background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); border-radius:18px;
+  }
+  .contact-img{
+    width:min(420px, 100%); aspect-ratio:1; object-fit:contain;
+    filter:hue-rotate(205deg) saturate(1.15) contrast(1.05);
+  }
+  .roundel{
+    position:absolute; inset:auto 16px 16px auto; font-size:12px; letter-spacing:.2em; color:var(--muted);
+    padding:6px 10px; border:1px solid rgba(255,255,255,.18); border-radius:999px; background:rgba(255,255,255,.05);
+  }
+  @media (max-width:860px){ .wrap{grid-template-columns:1fr; } .right{order:-1} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <section>
+      <h1>Her Flight Path</h1>
+      <p class="badge">A small interactive Air Force net-art story</p>
+      <p>Click through keepsakes to read short scenes — a jacket, a patch, a pair of boots — each one
+      opening a moment along her path: recruitment, training, first solo, deployment, return, epilogue.</p>
+      <div class="buttons">
+        <a class="button" href="index.html">▶ Enter Site</a>
+        <a class="button" href="contact.html">✉ Contact</a>
+      </div>
+      <p class="badge">Auto-redirecting to the site in 3 seconds…</p>
+    </section>
+
+    <aside class="right">
+      <!-- Put your contact image inside “untitled folder/” and name it contact.png or change the src -->
+      <img class="contact-img" src="untitled folder/contact.png" alt="Contact image">
+      <div class="roundel">USAF ✦ NET ART</div>
+    </aside>
+  </div>
+
+  <script>
+    // auto jump to index after 3s (remove if you don’t want it)
+    setTimeout(()=>{ location.href = 'index.html'; }, 3000);
+  </script>
+</body>
+</html>
