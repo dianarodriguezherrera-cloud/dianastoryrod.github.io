@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Her Flight Path</title>
+<style>
+  :root {
+    --bg: #0a1020;
+    --ink: #e8ecf5;
+    --muted: #a5adc0;
+    --accent: #6fa3ff;
+    --glow: 0 0 25px rgba(130,177,255,.25);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at 50% -10%, #1d2745 0%, var(--bg) 70%);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: rgba(10,16,32,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(6px);
+  }
+  .brand { font-weight: 700; letter-spacing: .05em; color: var(--accent); }
+  .btn {
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255,255,255,.05);
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .btn:hover { background: rgba(255,255,255,.1); }
+
+  main.scene {
+    position: relative;
+    height: 75vh;
+    max-width: 1000px;
+    margin: 40px auto;
+    background: linear-gradient(180deg, #0e1833 0%, #070b1a 100%);
+    border-radius: 24px;
+    box-shadow: var(--glow), 0 0 60px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  /* subtle grid */
+  main.scene::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      repeating-linear-gradient(0deg, rgba(111,163,255,.08) 0 1px, transparent 1px 24px),
+      repeating-linear-gradient(90deg, rgba(111,163,255,.08) 0 1px, transparent 1px 24px);
+    opacity:.7;
+    mask:linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.85));
+    pointer-events:none;
+  }
+  .hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--muted);
+    font-size: .9rem;
+  }
+
+  /* Clickable items */
+  .item {
+    position: absolute;
+    width: 13vw;
+    max-width: 160px;
+    min-width: 100px;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    background-color: #0f182e;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+    filter: hue-rotate(205deg) saturate(1.15) contrast(1.05);
+  }
+  .item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(111,163,255,0.4);
+  }
+
+  /* Correct clickable image paths */
+  .jacket { left: 8%;  top: 22%; background-image: url('untitled%20folder/1016U-USAF-PT-Jacket-overall-scaled-removebg-preview.png'); }
+  .wings  { left: 30%; top: 12%; background-image: url('untitled%20folder/S-16067-removebg-preview.png'); }
+  .badge  { left: 55%; top: 25%; background-image: url('untitled%20folder/afr_8074_af_flight_suit_hook_n_loop_patch_d81baf70-f993-4602-9ab1-cde15cc8a438-removebg-preview.png'); }
+  .photo  { left: 75%; top: 15%; background-image: url('untitled%20folder/FW1056_COY_1001_0-removebg-preview.png'); }
+  .patch  { left: 25%; bottom: 12%; background-image: url('untitled%20folder/eee19eff-5ed3-4197-b052-0daf8d468884_24c5db6d-2a73-47e2-9942-d62d47b91586-removebg-preview.png'); }
+  .tags   { left: 60%; bottom: 8%;  background-image: url('untitled%20folder/image-removebg-preview.png'); }
+
+  /* Modal pop-ups */
+  .modal[hidden] { display: none; }
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,10,25,0.75);
+    backdrop-filter: blur(6px);
+    display: grid;
+    place-items: center;
+    z-index: 50;
+  }
+  .panel {
+    width: min(700px, 90vw);
+    background: #0e152b;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    box-shadow: 0 10px 60px rgba(0,0,0,0.7), 0 0 30px rgba(111,163,255,0.2);
+    padding: 32px;
+    position: relative;
+    color: var(--ink);
+  }
+  .panel h2 { margin-top: 0; color: var(--accent); }
+  .panel p { line-height: 1.7; color: #e2e7f5; }
+  .close {
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: var(--ink);
+    cursor: pointer;
+    padding: 5px 10px;
+  }
+  .close:hover { background: rgba(255,255,255,0.15); }
+  .nav { display: flex; gap: 10px; margin-top: 14px; }
+  .nav button {
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  .nav button:hover { background: rgba(255,255,255,0.15); }
+
+  footer {
+    text-align: center;
+    padding: 40px 10px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">Her Flight Path</div>
+    <div>
+      <button class="btn" id="soundToggle">🔊 Sound</button>
+    </div>
+  </header>
+
+  <main class="scene" aria-label="Flight desk with scattered keepsakes">
+    <a class="item jacket" data-target="dlg-1" title="Recruitment"></a>
+    <a class="item wings"  data-target="dlg-2" title="Training"></a>
+    <a class="item badge"  data-target="dlg-3" title="First Solo"></a>
+    <a class="item photo"  data-target="dlg-4" title="Deployment"></a>
+    <a class="item patch"  data-target="dlg-5" title="Return"></a>
+    <a class="item tags"   data-target="dlg-6" title="Epilogue"></a>
+    <div class="hint">Click an item to open a story • Press Esc to close</div>
+  </main>
+
+  <!-- Story Modals -->
+  <div id="dlg-1" class="modal" hidden>
+    <div class="panel">
+      <button class="close" data-action="close">✕</button>
+      <h2>Recruitment — The Doorway</h2>
+      <p>The jacket still smells like jet fuel and rain. She runs a thumb along the stitched name tape and feels a soft thud in her chest—the sound of a door clicking open. In a waiting room brighter than morning, she signs her name. Courage, she learns, is not loud; it’s a quiet hand steadying itself.</p>
+      <div class="nav"><button data-action="next">Next ▶︎</button></div>
+    </div>
+  </div>
+
+  <div id="dlg-2" class="modal" hidden>
+    <div class="panel">
+      <button class="close" data-action="close">✕</button>
+      <h2>Training — Learning the Sky</h2>
+      <p>Her first set of wings is light and silver. The real lessons are heavier: checklists like prayers, acronyms like new alphabets, and the calm voice of an instructor saying, “Again.” The runway looks short until she trusts the math. The sky, it turns out, is a patient teacher.</p>
+      <div class="nav"><button data-action="prev">◀︎ Prev</button><button data-action="next">Next ▶︎</button></div>
+    </div>
+  </div>
+
+  <div id="dlg-3" class="modal" hidden>
+    <div class="panel">
+      <button class="close" data-action="close">✕</button>
+      <h2>First Solo — Name, Spoken by Wind</h2>
+      <p>The patch is new, its threads still stiff. She whispers her call sign into the headset once, just to hear it echo back. On final approach, the world narrows to centerline and numbers. Tires whisper. The earth accepts her. For the first time, the silence after shutdown belongs to her too.</p>
+      <div class="nav"><button data-action="prev">◀︎ Prev</button><button data-action="next">Next ▶︎</button></div>
+    </div>
+  </div>
+
+  <div id="dlg-4" class="modal" hidden>
+    <div class="panel">
+      <button class="close" data-action="close">✕</button>
+      <h2>Deployment — The Weight of Distance</h2>
+      <p>In the photo, the horizon is a thin coin of light. Nights stack up like rations. She learns the shape of home by its absence: voices through a phone, the time zones braided like rope. The hum of the aircraft becomes a borrowed heartbeat. “Copy, roger.” The work is precise so the thoughts can wander safely.</p>
+      <div class="nav"><button data-action="prev">◀︎ Prev</button><button data-action="next">Next ▶︎</button></div>
+    </div>
+  </div>
+
+  <div id="dlg-5" class="modal" hidden>
+    <div class="panel">
+      <button class="close" data-action="close">✕</button>
+      <h2>Return — Patches and Stories</h2>
+      <p>The boots are scuffed now, the soles worn thin from miles of tarmac and hangar floors. Stories cluster in the chow hall like migrating birds: the near-misses, the perfect landings, the dumb luck. Pride hums steady—quiet as the afterglow of a mission well done.</p>
+      <div class="nav"><button data-action="prev">◀︎ Prev</button><button data-action="next">Next ▶︎</button></div>
+    </div>
+  </div>
+
+  <div id="dlg-6" class="modal" hidden>
+    <div class="panel">
+      <button class="close" data-action="close">✕</button>
+      <h2>Epilogue — What Remains</h2>
+      <p>The shorts are folded neatly, the name barely visible on the tag. She doesn’t wear them much now, but keeps them to remember early mornings before sunrise, when discipline was a promise. The sound of a distant jet still makes her look up. Tomorrow is just another flight.</p>
+      <div class="nav"><button data-action="prev">◀︎ Prev</button><button data-action="close">Close ⌂</button></div>
+    </div>
+  </div>
+
+  <footer>© 2025 Her Flight Path — A digital art project inspired by the U.S. Air Force.</footer>
+
+  <audio id="ambience" loop preload="auto">
+    <source src="audio/radio-chatter.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    const order = ['dlg-1','dlg-2','dlg-3','dlg-4','dlg-5','dlg-6'];
+    let current = -1;
+
+    function openDlg(id){
+      document.querySelectorAll('.modal').forEach(m=>m.hidden=true);
+      const el=document.getElementById(id);
+      if(el){ el.hidden=false; current=order.indexOf(id); startAudio(); }
+    }
+    function closeDlg(){
+      document.querySelectorAll('.modal').forEach(m=>m.hidden=true);
+      current=-1;
+    }
+    function step(n){
+      if(current===-1) return;
+      const next=Math.min(order.length-1, Math.max(0,current+n));
+      openDlg(order[next]);
+    }
+
+    document.addEventListener('click', e=>{
+      const a=e.target.closest('.item');
+      if(a && a.dataset.target){ e.preventDefault(); openDlg(a.dataset.target); }
+      const b=e.target.closest('[data-action]');
+      if(!b) return;
+      const act=b.dataset.action;
+      if(act==='close') closeDlg();
+      if(act==='next') step(1);
+      if(act==='prev') step(-1);
+    });
+
+    window.addEventListener('keydown', e=>{
+      if(e.key==='Escape') closeDlg();
+      if(e.key==='ArrowRight') step(1);
+      if(e.key==='ArrowLeft') step(-1);
+    });
+
+    const audio=document.getElementById('ambience');
+    const toggle=document.getElementById('soundToggle');
+    let playing=false;
+    async function startAudio(){
+      if(playing) return;
+      try{
+        await audio.play();
+        playing=true;
+        toggle.textContent='🔊 Sound: On';
+      }catch{}
+    }
+    toggle.addEventListener('click', ()=>{
+      if(!playing){ startAudio(); }
+      else { audio.pause(); playing=false; toggle.textContent='🔇 Sound: Off'; }
+    });
+  </script>
+</body>
+</html>
