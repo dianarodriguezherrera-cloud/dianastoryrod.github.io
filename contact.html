@@ -28,25 +28,33 @@
   }
   h1{margin:0 0 8px; color:var(--accent)}
   p{margin:0 0 10px; color:#dfe6f9}
-  a{color:var(--ink)} a:hover{opacity:.85}
+  a{color:var(--ink); text-decoration:none}
+  a:hover{opacity:.85; text-decoration:underline}
   .imgWrap{display:grid; place-items:center; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); border-radius:16px}
-  .imgWrap img{width:min(360px, 100%); aspect-ratio:1; object-fit:contain; filter:hue-rotate(205deg) saturate(1.15) contrast(1.05)}
-  .buttons{display:flex; gap:10px; margin-top:14px}
+  .imgWrap img{width:min(360px, 100%); aspect-ratio:1; object-fit:contain; filter:hue-rotate(205deg) saturate(1.1) contrast(1.05)}
+  .buttons{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
   .button{border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); border-radius:10px; padding:10px 14px; text-decoration:none; font-weight:600}
   .button:hover{background:rgba(255,255,255,.12)}
+  .label{color:var(--muted); font-size:.95rem}
   @media (max-width:840px){ .card{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
   <div class="card grid">
     <div class="imgWrap">
-      <img src="untitled folder/contact.png" alt="Contact image">
+      <img src="untitled folder/contact.png" alt="Portrait / contact image">
     </div>
     <section>
       <h1>Contact</h1>
-      <p><strong>Name:</strong> Your Name Here</p>
-      <p><strong>Email:</strong> <a href="mailto:you@example.com">you@example.com</a></p>
-      <p><strong>Instagram:</strong> <a href="https://instagram.com/yourhandle" target="_blank" rel="noreferrer">@yourhandle</a></p>
+      <p class="label">Name</p>
+      <p><strong>Diana Rodriguez-Herrera</strong></p>
+
+      <p class="label">Email</p>
+      <p><a href="mailto:dianarh2006@gmail.com">dianarh2006@gmail.com</a></p>
+
+      <p class="label">Phone</p>
+      <p><a href="tel:+13234953598">+1 (323) 495-3598</a></p>
+
       <div class="buttons">
         <a class="button" href="index.html">◀ Back to Site</a>
         <a class="button" href="home.html">⌂ Home</a>
